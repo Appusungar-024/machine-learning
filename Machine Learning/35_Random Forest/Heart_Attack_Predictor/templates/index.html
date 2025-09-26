@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heart Disease Risk Prediction</title>
+    <style>
+        /* Full-screen animated background */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #e0eafc;
+        }
+
+        /* Gradient animation */
+        .animated-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(270deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+            background-size: 800% 800%;
+            animation: gradientBG 20s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+
+        /* Floating circles for subtle particle effect */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            animation: float 15s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {transform: translateY(100vh) translateX(0);}
+            100% {transform: translateY(-50vh) translateX(100px);}
+        }
+
+        /* Center container */
+        .center-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Card styling */
+        .login {
+            background: rgba(255, 255, 255, 0.95);
+            max-width: fit-content;
+            padding: 40px 30px 30px 30px;
+            border-radius: 18px;
+            overflow-x: auto;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+            transform: translateY(-20px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d6cdf;
+            margin-bottom: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .form-group:hover {
+            transform: translateY(-3px);
+        }
+
+        input[type="number"], select {
+            padding: 12px 14px;
+            border: 1px solid #bfc9d4;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #f5f8fd;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: #2d6cdf;
+            outline: none;
+            background: #e0eafc;
+            box-shadow: 0 0 10px rgba(45,108,223,0.2);
+        }
+
+        label {
+            font-size: 15px;
+            color: #2d6cdf;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .btn {
+            grid-column: 1 / span 2;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #2d6cdf 0%, #5fa8d3 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 6px 20px rgba(45,108,223,0.3);
+            transition: all 0.4s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #5fa8d3 0%, #2d6cdf 100%);
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(45,108,223,0.4);
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-top: 30px;
+            font-size: 22px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #ff4b5c, #ffb347);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: fadeInHighlight 1s ease forwards;
+        }
+
+        @keyframes fadeInHighlight {
+            from {opacity: 0; transform: scale(0.95);}
+            to {opacity: 1; transform: scale(1);}
+        }
+
+        @media (max-width: 800px) {
+            form { grid-template-columns: 1fr; }
+            .btn { grid-column: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background layers -->
+    <div class="animated-bg"></div>
+    <div class="center-container">
+        <div class="login">
+            <h1>❤️ Heart Attack Risk Prediction</h1>
+            <form action="{{ url_for('predict_datapoint')}}" method="post">
+                <!-- Numeric Inputs -->
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" step="any" name="age" id="age" placeholder="Enter your age in years" required>
+                </div>
+                <div class="form-group">
+                    <label for="thalach">Maximum Heart Rate Achieved</label>
+                    <input type="number" step="any" name="thalach" id="thalach" placeholder="e.g., 150" required>
+                </div>
+                <div class="form-group">
+                    <label for="trtbps_winsorize">Resting Blood Pressure (mm Hg)</label>
+                    <input type="number" step="any" name="trtbps_winsorize" id="trtbps_winsorize" placeholder="e.g., 120" required>
+                </div>
+                <div class="form-group">
+                    <label for="oldpeak_winsorize_sqrt">ST Depression (after exercise)</label>
+                    <input type="number" step="any" name="oldpeak_winsorize_sqrt" id="oldpeak_winsorize_sqrt" placeholder="e.g., 1.2" required>
+                </div>
+
+                <!-- Categorical Inputs -->
+                <div class="form-group">
+                    <label for="sex">Gender</label>
+                    <select name="sex" id="sex" required>
+                        {% for text, value in sex_options %}
+                        <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cp">Chest Pain Type</label>
+                    <select name="cp" id="cp" required>
+                        {% for text, value in cp_options %}
+                        <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exang">Exercise Induced Angina</label>
+                    <select name="exang" id="exang" required>
+                        {% for text, value in exang_options %}
+                        <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="slope">Heart Response (ST Slope)</label>
+                    <select name="slope" id="slope" required>
+                        {% for text, value in slope_options %}
+                        <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ca">Number of Major Blocked Vessels</label>
+                    <select name="ca" id="ca" required>
+                        {% for text, value in ca_options %}
+                        <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="thal">Blood Flow Test (Thalassemia)</label>
+                    <select name="thal" id="thal" required>
+                        {% for text, value in thal_options %}
+                        <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn">Predict</button>
+            </form>
+
+            {% if result is not none %}
+            <h2>{{ result }}</h2>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
