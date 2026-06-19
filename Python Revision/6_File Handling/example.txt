@@ -1,7 +1,4 @@
-Hello World!
-this is a new line.
-I am going to override the privious text file.
-Append operation taking place!
-First line 
-Second line 
-Third line
+Hello how are you?
+i am good 
+shiva is my name
+welcome to the course
